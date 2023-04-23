@@ -10,6 +10,7 @@ const app = express();
 
 //setting middleware
 app.use(express.json());
+app.use(express.urlencoded({extended: false}))
 
 // importing the config file
 dotenv.config({ path: "env/config.env" });
@@ -52,6 +53,19 @@ app.post('/insert-product', async(req, res) => {
 app.get('/all-products', async(req, res) => {
     try {
         const product = await Product.find({});
+        res.status(200).json({message: product})
+    }
+    catch(error) {
+        res.status(500).json({message: error.message});
+    }
+})
+
+//fetch product by id
+app.get('/product/:id', async(req, res) => {
+    try {
+        //deconstruct id from req using params 
+        const {id} = req.params;
+        const product = await Product.findById(id);
         res.status(200).json({message: product})
     }
     catch(error) {
