@@ -1,5 +1,4 @@
  //jslint-ignore-line
-const { timeStamp } = require("console");
 const mongoose = require("mongoose");
 
 const productSchema = mongoose.Schema(
@@ -22,9 +21,9 @@ const productSchema = mongoose.Schema(
       required: false,
     },
   },
-  { timeStamps: true }
+  { timestamps: true }
 );
 
 const Product = mongoose.model("Product", productSchema);
 
-module.export = Product;
+module.exports = Product;
