@@ -48,6 +48,17 @@ app.post('/insert-product', async(req, res) => {
     }
 })
 
+//fetch all products
+app.get('/all-products', async(req, res) => {
+    try {
+        const product = await Product.find({});
+        res.status(200).json({message: product})
+    }
+    catch(error) {
+        res.status(500).json({message: error.message});
+    }
+})
+
 app.listen(3000, () => {
   console.log("Server running");
 });
