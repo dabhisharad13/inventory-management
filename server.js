@@ -24,14 +24,12 @@ const PORT = process.env.PORT || 8080;
 const DATABASE = process.env.DATABASE;
 
 //database connection
-mongoose
-  .connect(DATABASE)
-  .then(() => {
-    console.log("Database connected");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+try {
+  mongoose.connect(DATABASE);
+  console.log("Connected to DB");
+} catch (error) {
+  console.log(error);
+}
 
 //routes
 app.get("/", (req, res) => {
