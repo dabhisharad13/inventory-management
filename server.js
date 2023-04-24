@@ -4,13 +4,13 @@ const express = require("express");
 const dotenv = require("dotenv");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
-const Product = require("./models/productModel")
+const Product = require("./models/productModel");
 
 const app = express();
 
 //setting middleware
 app.use(express.json());
-app.use(express.urlencoded({extended: false}))
+app.use(express.urlencoded({ extended: false }));
 
 // importing the config file
 dotenv.config({ path: "env/config.env" });
@@ -39,39 +39,53 @@ app.get("/", (req, res) => {
 });
 
 //insert product in db
-app.post('/insert-product', async(req, res) => {
-    try {
-        const product = await Product.create(req.body);
-        res.status(200).json({message: product})
-    }
-    catch(error) {
-        res.status(500).json({message: error.message});
-    }
-})
+app.post("/insert-product", async (req, res) => {
+  try {
+    const product = await Product.create(req.body);
+    res.status(200).json({ message: product });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 //fetch all products
-app.get('/all-products', async(req, res) => {
-    try {
-        const product = await Product.find({});
-        res.status(200).json({message: product})
-    }
-    catch(error) {
-        res.status(500).json({message: error.message});
-    }
-})
+app.get("/all-products", async (req, res) => {
+  try {
+    const product = await Product.find({});
+    res.status(200).json({ message: product });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 //fetch product by id
-app.get('/product/:id', async(req, res) => {
-    try {
-        //deconstruct id from req using params 
-        const {id} = req.params;
-        const product = await Product.findById(id);
-        res.status(200).json({message: product})
+app.get("/product/:id", async (req, res) => {
+  try {
+    //deconstruct id from req using params
+    const { id } = req.params;
+    const product = await Product.findById(id);
+    res.status(200).json({ message: product });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+//update a product in db
+app.put("/product/:id", async (req, res) => {
+  try {
+    //deconstruct id from req using params
+    const { id } = req.params;
+    const product = await Product.findByIdAndUpdate(id, req.body);
+    //if product not found
+    if (!product) {
+      res.status(404).json({ message: `Cannot find product with id : ${id}` });
     }
-    catch(error) {
-        res.status(500).json({message: error.message});
-    }
-})
+    const updatedProduct = await Product.findById(id);
+    res.status(200).json({ message: updatedProduct });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 app.listen(3000, () => {
   console.log("Server running");
