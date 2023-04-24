@@ -87,6 +87,22 @@ app.put("/product/:id", async (req, res) => {
   }
 });
 
+//delete a product in db
+app.delete("/product/:id", async (req, res) => {
+  try {
+    //deconstruct id from req using params
+    const { id } = req.params;
+    const product = await Product.findByIdAndDelete(id);
+    //if product not found
+    if (!product) {
+      res.status(404).json({ message: `Cannot find product with id : ${id}` });
+    }
+    res.status(200).json({ message: "Product deleted" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 app.listen(3000, () => {
   console.log("Server running");
 });
